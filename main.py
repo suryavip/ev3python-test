@@ -8,10 +8,40 @@ from pybricks.parameters import (Port, Stop, Direction, Button, Color,
 from pybricks.tools import print, wait, StopWatch
 from pybricks.robotics import DriveBase
 
-# Write your program here
-brick.sound.beep(500, 100)
-brick.sound.beep(600, 100)
-brick.sound.beep(700, 100)
-brick.sound.beep(800, 100)
-brick.sound.beep(900, 100)
-brick.sound.beep(1000, 100)
+from threading import Thread
+from time import sleep
+
+def startStopSound(mode='start'):
+    config = range(500, 1100, 100) if mode == 'start' else range(1000, 400, -100)
+    for x in config:
+        brick.sound.beep(x, 100)
+
+class logPowerCurrentUsage():
+    run = False
+    lastValue = 0
+    def log(self):
+        while self.run:
+            currentValue = brick.battery.current()
+            if currentValue != self.lastValue:
+                print('Power usage: {}mA'.format(currentValue))
+            self.lastValue = currentValue
+            sleep(0.1)
+    def __init__(self):
+        self.run = True
+        t = Thread(target=self.log)
+        t.start()
+    def stop(self):
+        self.run = False
+
+
+startStopSound()
+
+powerLog = logPowerCurrentUsage()
+
+motorA = Motor(Port.A)
+motorA.run_target(360 * 2, 360)
+motorA.run_target(360 * 2, 0)
+
+powerLog.stop()
+
+startStopSound(mode='stop')
