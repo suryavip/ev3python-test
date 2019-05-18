@@ -38,23 +38,37 @@ class LogPowerUsage(ThreadedLogging):
 # startStopSound()
 
 
-powerLog = LogPowerUsage(showPowerUsage=True)
+powerLog = LogPowerUsage(showPowerUsage=False)
 
-motorA = Motor(Port.A)
-motorB = Motor(Port.B)
-motorC = Motor(Port.C)
+brick.sound.file(SoundFile.HELLO)
+while Button.CENTER not in brick.buttons():
+    if Button.LEFT in brick.buttons():
+        brick.sound.file(SoundFile.LEFT)
+    elif Button.RIGHT in brick.buttons():
+        brick.sound.file(SoundFile.RIGHT)
+    elif Button.UP in brick.buttons():
+        brick.sound.file(SoundFile.UP)
+    elif Button.DOWN in brick.buttons():
+        brick.sound.file(SoundFile.DOWN)
+    wait(10)
+brick.sound.file(SoundFile.GOODBYE)
 
-for speed in range(10, 101, 1):
+'''motorA = Motor(Port.A)
+
+#motorB = Motor(Port.B)
+#motorC = Motor(Port.C)
+
+for speed in range(20, 101, 1):
     motorA.dc(speed)
-    motorB.dc(speed)
-    motorC.dc(speed)
-    wait(100)
+    #motorB.dc(speed)
+    #motorC.dc(speed)
+    wait(10)
 
-wait(1000)
+wait(2000)
 
 motorA.stop()
-motorB.stop()
-motorC.stop()
+#motorB.stop()
+#motorC.stop()'''
 
 powerLog.stop()
 
